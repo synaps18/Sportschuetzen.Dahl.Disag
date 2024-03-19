@@ -39,6 +39,11 @@ public class SerialWrapper : IDisposable
 	    return _serialConnection.Connect();
     }
 
+    public bool Disconnect()
+    {
+        return _serialConnection.Disconnect();
+    }
+
     public async Task Send(string data)
     {
         await Send(EDisagHex.ENQ);

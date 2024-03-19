@@ -32,6 +32,15 @@ public class SerialConnection : IDisposable
         _serialPort.Open();
         return _serialPort.IsOpen;
     }
+
+    public bool Disconnect()
+    {
+		if (!_serialPort.IsOpen) return true;
+
+		_serialPort.Close();
+		return !_serialPort.IsOpen;
+	}
+
     public SerialConnection(string comPort)
     {
         _serialPort = new SerialPort(comPort)
