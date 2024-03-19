@@ -21,6 +21,17 @@ public class SerialConnection : IDisposable
         Interval = 100
     };
 
+
+    public bool Connect()
+    {
+	    if (_serialPort.IsOpen)
+	    {
+            _serialPort.Close();
+	    };
+
+        _serialPort.Open();
+        return _serialPort.IsOpen;
+    }
     public SerialConnection(string comPort)
     {
         _serialPort = new SerialPort(comPort)

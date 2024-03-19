@@ -18,7 +18,7 @@ public class DisagStreifen
         //}
     }
 
-    public List<DisagSpiegel> Spiegel { get; }
+    public List<DisagSpiegel> Spiegel { get; set; }
 
     public EScheibentyp Scheibentyp { get; }
 

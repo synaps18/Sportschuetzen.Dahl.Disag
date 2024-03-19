@@ -34,6 +34,11 @@ public class SerialWrapper : IDisposable
         _serialConnection.SetBaud(EDisagBaudrate.B_38400);
     }
 
+    public bool Connect()
+    {
+	    return _serialConnection.Connect();
+    }
+
     public async Task Send(string data)
     {
         await Send(EDisagHex.ENQ);

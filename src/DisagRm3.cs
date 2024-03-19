@@ -28,6 +28,11 @@ public class DisagRm3
         _serialWrapper = new SerialWrapper(comPort);
     }
 
+    public bool Connect()
+    {
+	    return _serialWrapper.Connect();
+    }
+
     public async Task CancelAsync()
     {
         using var sequence = new CancelSequence(_serialWrapper);
