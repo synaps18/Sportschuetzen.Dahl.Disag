@@ -6,7 +6,7 @@ using Sportschützen.Dahl.DisagRm3.Serial;
 
 namespace Sportschützen.Dahl.DisagRm3;
 
-public class DisagRm3
+public class DisagRm3 : IDisagRm3
 {
     private readonly SerialWrapper _serialWrapper;
 
