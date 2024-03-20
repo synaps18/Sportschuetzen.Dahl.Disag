@@ -15,7 +15,7 @@ public interface IDisagRm3
 	/// <summary>
 	///     Event that is raised when the connection to the Disag changes
 	/// </summary>
-	event EventHandler<bool>? OnConnectionChanged;
+	event EventHandler<bool>? ConnectionChanged;
 
 	/// <summary>
 	///     Cancels the current operation

@@ -13,7 +13,7 @@ public class DisagRm3 : IDisagRm3
 	public event EventHandler<bool>? IsWorkingChanged;
 
 	/// <inheritdoc />
-	public event EventHandler<bool>? OnConnectionChanged
+	public event EventHandler<bool>? ConnectionChanged
 	{
 		add => _serialWrapper.OnConnectionChanged += value;
 		remove => _serialWrapper.OnConnectionChanged -= value;
