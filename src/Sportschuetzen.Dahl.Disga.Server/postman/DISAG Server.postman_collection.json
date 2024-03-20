@@ -1,0 +1,232 @@
+{
+	"info": {
+		"_postman_id": "459c0257-0782-416a-b4ef-26b5e4bb46fa",
+		"name": "DISAG Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12389203"
+	},
+	"item": [
+		{
+			"name": "RM3/Get/Serial",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Get/Serial",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Get",
+						"Serial"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Get/Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Get/Type",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Get",
+						"Type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Get/Serie",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Get/Serie?streifen=1&schuss=1&type=LG5&auswertung=ZR&aufdruck=",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Get",
+						"Serie"
+					],
+					"query": [
+						{
+							"key": "streifen",
+							"value": "1"
+						},
+						{
+							"key": "schuss",
+							"value": "1"
+						},
+						{
+							"key": "type",
+							"value": "LG5"
+						},
+						{
+							"key": "auswertung",
+							"value": "ZR"
+						},
+						{
+							"key": "aufdruck",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Cancel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Cancel",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Connect",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Connect",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Connect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Disconnect",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Disconnect",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Disconnect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/End",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/End",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"End"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Fer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Fer",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Fer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Fern",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Fern",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Fern"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RM3/Do/Repeat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/RM3/Do/Repeat",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"RM3",
+						"Do",
+						"Repeat"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

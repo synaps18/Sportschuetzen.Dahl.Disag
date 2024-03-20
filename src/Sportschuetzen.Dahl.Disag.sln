@@ -5,6 +5,10 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportschuetzen.Dahl.Disag.Rm3", "Sportschuetzen.Dahl.Disag.Rm3\Sportschuetzen.Dahl.Disag.Rm3.csproj", "{30C06181-FF52-4E96-BFBB-72B83E8F16FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sportschuetzen.Dahl.Disag.Models", "Sportschuetzen.Dahl.Disag.Models\Sportschuetzen.Dahl.Disag.Models.csproj", "{CF1B2DEC-0AB5-4601-80D7-4A269893334A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportschuetzen.Dahl.Disag.Server", "Sportschuetzen.Dahl.Disga.Server\Sportschuetzen.Dahl.Disag.Server.csproj", "{42F2C3C0-99D5-428F-A351-3368D1C36731}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{30C06181-FF52-4E96-BFBB-72B83E8F16FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30C06181-FF52-4E96-BFBB-72B83E8F16FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30C06181-FF52-4E96-BFBB-72B83E8F16FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF1B2DEC-0AB5-4601-80D7-4A269893334A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF1B2DEC-0AB5-4601-80D7-4A269893334A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF1B2DEC-0AB5-4601-80D7-4A269893334A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF1B2DEC-0AB5-4601-80D7-4A269893334A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
