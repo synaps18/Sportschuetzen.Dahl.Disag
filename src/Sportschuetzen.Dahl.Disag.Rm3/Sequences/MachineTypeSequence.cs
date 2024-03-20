@@ -10,7 +10,7 @@ internal class MachineTypeSequence : SerialSequence<string>
 {
     private string? _receivedMachineType;
 
-    public MachineTypeSequence(SerialWrapper serialWrapper) : base(serialWrapper)
+    public MachineTypeSequence(SerialHandler serialHandler) : base(serialHandler)
     {
     }
 
@@ -26,7 +26,7 @@ internal class MachineTypeSequence : SerialSequence<string>
         else if (e.Command == DISAG_Befehle_Empfangen.WSC)
         {
             await Task.Delay(200);
-            await SerialWrapper.Send(EDisagBefehle.ABR);
+            await SerialHandler.Send(EDisagBefehle.ABR);
 
             ReleaseAwaitingData();
         }
@@ -39,7 +39,7 @@ internal class MachineTypeSequence : SerialSequence<string>
 
     protected override async Task<string> SequenceToCall()
     {
-        await SerialWrapper.Send(EDisagBefehle.TYP);
+        await SerialHandler.Send(EDisagBefehle.TYP);
 
         await AwaitDataAsync();
 

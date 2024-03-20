@@ -5,25 +5,25 @@ namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 
 internal class CancelSequence : SerialSequence<string>
 {
-    public CancelSequence(SerialWrapper serialWrapper) : base(serialWrapper)
+    public CancelSequence(SerialHandler serialHandler) : base(serialHandler)
     {
-        SerialWrapper.OnHexReceived += SerialWrapperOnHexReceived;
+        SerialHandler.OnHexReceived += SerialHandlerOnHexReceived;
     }
 
     public override void Dispose()
     {
-        SerialWrapper.OnHexReceived -= SerialWrapperOnHexReceived;
+        SerialHandler.OnHexReceived -= SerialHandlerOnHexReceived;
         base.Dispose();
     }
 
-    private void SerialWrapperOnHexReceived(object? sender, EDisagHex e)
+    private void SerialHandlerOnHexReceived(object? sender, EDisagHex e)
     {
         if (e == EDisagHex.ACK) ReleaseAwaitingData();
     }
 
     protected override async Task<string> SequenceToCall()
     {
-        await SerialWrapper.Send(EDisagBefehle.ABR);
+        await SerialHandler.Send(EDisagBefehle.ABR);
 
         await AwaitDataAsync();
 

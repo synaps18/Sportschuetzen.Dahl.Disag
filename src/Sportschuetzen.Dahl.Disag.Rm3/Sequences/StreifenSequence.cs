@@ -13,9 +13,9 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="serialWrapper"></param>
+    /// <param name="serialHandler"></param>
     /// <param name="parameter"></param>
-    public StreifenSequence(SerialWrapper serialWrapper, SeriesParameter parameter) : base(serialWrapper)
+    public StreifenSequence(SerialHandler serialHandler, SeriesParameter parameter) : base(serialHandler)
     {
         this.Debug("Stripe Sequence constructor");
         _disagSerie = new DisagSerie
@@ -46,7 +46,7 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
                 if (e.Parameter.Contains('-'))
                 {
                     await Task.Delay(200);
-                    await SerialWrapper.Send(0, 0);
+                    await SerialHandler.Send(0, 0);
                 }
                 else
                 {
@@ -72,7 +72,7 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
         var serialString = _disagSerie.ToString();
 
         this.Debug($"Send Stripe Info: {serialString}");
-        await SerialWrapper.Send(serialString);
+        await SerialHandler.Send(serialString);
 
         await AwaitDataAsync();
 

@@ -8,7 +8,7 @@ internal class RepeatSequence : SerialSequence<string>
 {
     private string? _receivedData;
 
-    public RepeatSequence(SerialWrapper serialWrapper) : base(serialWrapper)
+    public RepeatSequence(SerialHandler serialHandler) : base(serialHandler)
     {
     }
 
@@ -22,7 +22,7 @@ internal class RepeatSequence : SerialSequence<string>
 
     protected override async Task<string> SequenceToCall()
     {
-        await SerialWrapper.Send(EDisagBefehle.WID);
+        await SerialHandler.Send(EDisagBefehle.WID);
 
         await AwaitDataAsync();
 

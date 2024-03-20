@@ -7,7 +7,7 @@ namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 internal abstract class SerialSequence<T> : IDisposable
 {
     private readonly CancellationTokenSource _tokenSource = new();
-    protected readonly SerialWrapper SerialWrapper;
+    protected readonly SerialHandler SerialHandler;
 
     private int _awaitCounter;
     private Task? _awaitingDataTask;
@@ -15,16 +15,16 @@ internal abstract class SerialSequence<T> : IDisposable
     private bool _isBusy;
     protected bool AwaitingData = true;
 
-    protected SerialSequence(SerialWrapper serialWrapper)
+    protected SerialSequence(SerialHandler serialHandler)
     {
-        SerialWrapper = serialWrapper;
-        serialWrapper.OnDataReceived += SerialWrapper_OnDataReceived;
+        SerialHandler = serialHandler;
+        serialHandler.OnDataReceived += SerialWrapper_OnDataReceived;
     }
 
     public virtual void Dispose()
     {
         this.Info($"Disposing [{this.GetType()}]");
-        SerialWrapper.OnDataReceived -= SerialWrapper_OnDataReceived;
+        SerialHandler.OnDataReceived -= SerialWrapper_OnDataReceived;
     }
 
     protected virtual void SerialWrapper_OnDataReceived(object? sender, DisagResponse e)

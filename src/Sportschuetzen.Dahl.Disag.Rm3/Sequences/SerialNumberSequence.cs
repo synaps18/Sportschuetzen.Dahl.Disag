@@ -10,7 +10,7 @@ internal class SerialNumberSequence : SerialSequence<string>
 {
     private string? _receivedSerialNumer;
 
-    public SerialNumberSequence(SerialWrapper serialWrapper) : base(serialWrapper)
+    public SerialNumberSequence(SerialHandler serialHandler) : base(serialHandler)
     {
     }
 
@@ -26,7 +26,7 @@ internal class SerialNumberSequence : SerialSequence<string>
         else if (e.Command == DISAG_Befehle_Empfangen.WSC)
         {
             await Task.Delay(200);
-            await SerialWrapper.Send(EDisagBefehle.ABR);
+            await SerialHandler.Send(EDisagBefehle.ABR);
 
             ReleaseAwaitingData();
         }
@@ -39,7 +39,7 @@ internal class SerialNumberSequence : SerialSequence<string>
 
     protected override async Task<string> SequenceToCall()
     {
-        await SerialWrapper.Send(EDisagBefehle.SNR);
+        await SerialHandler.Send(EDisagBefehle.SNR);
 
         await AwaitDataAsync();
 

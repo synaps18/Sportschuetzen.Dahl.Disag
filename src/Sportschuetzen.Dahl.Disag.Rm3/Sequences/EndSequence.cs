@@ -8,7 +8,7 @@ internal class EndSequence : SerialSequence<string>
 {
     private string? _receivedData;
 
-    public EndSequence(SerialWrapper serialWrapper) : base(serialWrapper)
+    public EndSequence(SerialHandler serialHandler) : base(serialHandler)
     {
     }
 
@@ -23,7 +23,7 @@ internal class EndSequence : SerialSequence<string>
 
     protected override async Task<string> SequenceToCall()
     {
-        await SerialWrapper.Send(EDisagBefehle.END);
+        await SerialHandler.Send(EDisagBefehle.END);
 
         await AwaitDataAsync();
 
