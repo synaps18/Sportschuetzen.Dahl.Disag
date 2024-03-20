@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
+﻿using Sportschuetzen.Dahl.Disag.Models.Auswertung;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3;
 
@@ -62,11 +62,11 @@ public class DisagRm3Simulation : IDisagRm3
 	///<inheritdoc />
 	public async Task<DisagSerie> GetSeries(SeriesParameter parameter)
 	{
-		var result = await InvokeDisag(() => Task.FromResult(new DisagSerie(parameter)
+		var result = await InvokeDisag(() => Task.FromResult(new DisagSerie
 		{
 			Streifen = new List<DisagStreifen>
 			{
-				new(parameter.Scheibentyp, parameter.SchussProSpiegel)
+				new()
 				{
 					Spiegel = new List<DisagSpiegel>
 					{
@@ -74,7 +74,7 @@ public class DisagRm3Simulation : IDisagRm3
 						{
 							Schüsse = new List<DisagSchuss>
 							{
-								new(parameter.SchussProSpiegel)
+								new()
 							}
 						}
 					}

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO.Ports;
 using System.Timers;
-using Sportschuetzen.Dahl.Disag.Rm3.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 

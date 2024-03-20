@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Enum;
+﻿using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;

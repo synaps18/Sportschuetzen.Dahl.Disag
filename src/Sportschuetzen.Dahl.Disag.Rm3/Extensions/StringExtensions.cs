@@ -1,4 +1,6 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
+﻿using System.Globalization;
+using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Extensions;
@@ -61,7 +63,14 @@ public static class StringExtensions
         var shotAngle = parameterList[3];
         var shotFlag = parameterList[4];
 
-        var shot = new DisagSchuss(shotNumber, shotValue, shotDivisor, shotAngle, shotFlag);
+        var shot = new DisagSchuss
+        {
+	        Schussnummer = double.Parse(shotNumber, CultureInfo.InvariantCulture),
+	        Ringwert = double.Parse(shotValue, CultureInfo.InvariantCulture),
+	        Teilerwert = double.Parse(shotDivisor, CultureInfo.InvariantCulture),
+	        Winkel = double.Parse(shotAngle, CultureInfo.InvariantCulture),
+	        Flag = System.Enum.Parse<EDisagFlag>(shotFlag.Substring(0, 1)),
+	};
 
         return shot;
     }

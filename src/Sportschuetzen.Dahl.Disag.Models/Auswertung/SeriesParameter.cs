@@ -1,6 +1,6 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Enum;
+﻿using Sportschuetzen.Dahl.Disag.Models.Enum;
 
-namespace Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
+namespace Sportschuetzen.Dahl.Disag.Models.Auswertung;
 
 public class SeriesParameter
 {

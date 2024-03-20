@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Sportschützen.Dahl.DisagRm3;
-using Sportschützen.Dahl.DisagRm3.Auswertung;
-using Sportschützen.Dahl.DisagRm3.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Rm3;
 
 namespace Sportschuetzen.Dahl.Disag.Server.Controllers;
 
@@ -182,7 +182,7 @@ public class Rm3Controller : ControllerBase
 	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
 	[HttpGet("Get/Serie")]
-	public async Task<DisagSerie> GetSerie(int streifen, int schuss, EScheibentyp type, ERingauswertung ringauswertung, string aufdruck )
+	public async Task<DisagSerie> GetSerie([FromQuery] int streifen, [FromQuery] int schuss, [FromQuery] EScheibentyp type, [FromQuery] ERingauswertung ringauswertung, [FromQuery] string aufdruck = "")
 	{
 		try
 		{

@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
+﻿using Sportschuetzen.Dahl.Disag.Models.Auswertung;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3;
 

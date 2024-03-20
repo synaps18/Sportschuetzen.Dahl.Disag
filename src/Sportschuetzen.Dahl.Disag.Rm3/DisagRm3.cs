@@ -1,6 +1,6 @@
 ﻿using Serilog;
-using Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
-using Sportschuetzen.Dahl.Disag.Rm3.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
 

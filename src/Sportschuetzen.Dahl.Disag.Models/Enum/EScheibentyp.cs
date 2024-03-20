@@ -1,4 +1,4 @@
-﻿namespace Sportschuetzen.Dahl.Disag.Rm3.Enum;
+﻿namespace Sportschuetzen.Dahl.Disag.Models.Enum;
 
 public enum EScheibentyp
 {

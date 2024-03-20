@@ -1,4 +1,4 @@
-using Sportschützen.Dahl.DisagRm3;
+using Sportschuetzen.Dahl.Disag.Rm3;
 
 namespace Sportschuetzen.Dahl.Disag.Server
 {
@@ -9,8 +9,19 @@ namespace Sportschuetzen.Dahl.Disag.Server
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
-
-			builder.Services.AddSingleton<IDisagRm3, DisagRm3>();
+			switch (builder.Environment.EnvironmentName)
+			{
+				case "Development.Simulation":
+				{
+					builder.Services.AddSingleton<IDisagRm3, DisagRm3Simulation>();
+					break;
+				}
+				default:
+				{
+					builder.Services.AddSingleton<IDisagRm3, DisagRm3>();
+					break;
+				}
+			}
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

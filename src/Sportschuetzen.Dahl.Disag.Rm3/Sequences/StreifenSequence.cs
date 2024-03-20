@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Rm3.Auswertung;
+﻿using Sportschuetzen.Dahl.Disag.Models.Auswertung;
 using Sportschuetzen.Dahl.Disag.Rm3.Constants;
 using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
@@ -18,7 +18,15 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
     public StreifenSequence(SerialWrapper serialWrapper, SeriesParameter parameter) : base(serialWrapper)
     {
         this.Debug("Stripe Sequence constructor");
-        _disagSerie = new DisagSerie(parameter);
+        _disagSerie = new DisagSerie
+        {
+	        AnzahlSchussGesamt = parameter.AnzahlStreifen * (int)parameter.Scheibentyp,
+	        AnzahlSchussProSpiegel = parameter.SchussProSpiegel,
+	        Scheibentyp = parameter.Scheibentyp,
+	        Ringauswertung = parameter.Ringauswertung,
+
+	        Aufdruck = parameter.Aufdruck
+	};
     }
 
     protected override async void SerialWrapper_OnDataReceived(object? sender, DisagResponse e)
@@ -61,7 +69,7 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
 
     protected override async Task<DisagSerie> SequenceToCall()
     {
-        var serialString = _disagSerie.GetSerialString();
+        var serialString = _disagSerie.ToString();
 
         this.Debug($"Send Stripe Info: {serialString}");
         await SerialWrapper.Send(serialString);
@@ -74,7 +82,10 @@ internal class StreifenSequence : SerialSequence<DisagSerie>
     private void NewStripe()
     {
         this.Debug("New Stripe arrived");
-        var stripe = new DisagStreifen(_disagSerie.Scheibentyp, _disagSerie.AnzahlSchussProSpiegel);
+        var stripe = new DisagStreifen()
+        {
+            Scheibentyp = _disagSerie.Scheibentyp,
+		};
         _disagSerie.Streifen?.Add(stripe);
     }
 
