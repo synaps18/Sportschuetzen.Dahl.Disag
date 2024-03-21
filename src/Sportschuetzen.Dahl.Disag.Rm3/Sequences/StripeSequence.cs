@@ -67,11 +67,11 @@ internal class StripeSequence : Sequence<DisagSeries>
 
 		switch (e.Command)
 		{
-			case DISAG_Befehle_Empfangen.SCH:
+			case ReceiveCommandConstants.SCH:
 				this.Debug($"SCH received, Strip type [{e.Parameter}]");
 				NewSchuss(e.Parameter);
 				break;
-			case DISAG_Befehle_Empfangen.WSC:
+			case ReceiveCommandConstants.WSC:
 				this.Debug($"WSC empfangen, DISAG wartet auf Scheibe mit Schußzahl [{e.Parameter}]");
 
 
@@ -86,11 +86,11 @@ internal class StripeSequence : Sequence<DisagSeries>
 				}
 
 				break;
-			case DISAG_Befehle_Empfangen.WSE:
+			case ReceiveCommandConstants.WSE:
 				this.Debug("WSE empfangen, DISAG Letzte Scheibe wurde gesendet.");
 				ReleaseAwaitingData();
 				return;
-			case DISAG_Befehle_Empfangen.STA:
+			case ReceiveCommandConstants.STA:
 				this.Debug("STA gesendet, DISAG startet auswertung.");
 				return;
 			default:

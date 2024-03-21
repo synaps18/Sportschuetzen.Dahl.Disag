@@ -31,7 +31,7 @@ internal class NumberSequence : Sequence<string>
 		{
 			_receivedSerialNumber = e.Parameter;
 		}
-		else if (e.Command == DISAG_Befehle_Empfangen.WSC)
+		else if (e.Command == ReceiveCommandConstants.WSC)
 		{
 			await Task.Delay(200);
 			await SerialHandler.Send(EDisagCommand.ABR);
