@@ -1,12 +1,12 @@
-﻿using Sportschuetzen.Dahl.Disag.Models.Evaluation;
-using Sportschuetzen.Dahl.Disag.Rm3.Constants;
+﻿using Sportschuetzen.Dahl.Disag.Models.Constants;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
+using Sportschuetzen.Dahl.Disag.Models.Structs;
 using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
-using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 
-internal class StripeSequence : Sequence<DisagSeries>
+internal class StripSequence : Sequence<DisagSeries>
 {
 	private readonly DisagSeries _disagSeries;
 
@@ -14,9 +14,9 @@ internal class StripeSequence : Sequence<DisagSeries>
 	/// </summary>
 	/// <param name="serialHandler"></param>
 	/// <param name="parameter"></param>
-	public StripeSequence(SerialHandler serialHandler, SeriesParameter parameter) : base(serialHandler)
+	internal StripSequence(SerialHandler serialHandler, SeriesParameter parameter) : base(serialHandler)
 	{
-		this.Debug("Stripe Sequence constructor");
+		this.Debug("Strip Sequence constructor");
 		_disagSeries = new DisagSeries
 		{
 			TotalShots = parameter.NumberOfStrips * (int)parameter.StripType,
@@ -28,7 +28,7 @@ internal class StripeSequence : Sequence<DisagSeries>
 		};
 	}
 
-	private void NewSchuss(string serialShot)
+	private void NewShot(string serialShot)
 	{
 		this.Debug("New Shot arrived");
 		var disagSchuss = serialShot.ToDisagSchuss();
@@ -39,7 +39,7 @@ internal class StripeSequence : Sequence<DisagSeries>
 		_disagSeries.Stripes?.Last().BullsEyes.Add(bullsEye);
 	}
 
-	private void NewStripe()
+	private void NewStrip()
 	{
 		this.Debug("New Stripe arrived");
 		var stripe = new DisagStrip
@@ -68,13 +68,11 @@ internal class StripeSequence : Sequence<DisagSeries>
 		switch (e.Command)
 		{
 			case ReceiveCommandConstants.SCH:
-				this.Debug($"SCH received, Strip type [{e.Parameter}]");
-				NewSchuss(e.Parameter);
+				this.Debug($"{ReceiveCommandConstants.SCH} received, Strip type '{e.Parameter}'");
+				NewShot(e.Parameter);
 				break;
 			case ReceiveCommandConstants.WSC:
-				this.Debug($"WSC empfangen, DISAG wartet auf Scheibe mit Schußzahl [{e.Parameter}]");
-
-
+				this.Debug($"{ReceiveCommandConstants.WSC} received, disag is waiting for strip with number of shots '{e.Parameter}'");
 				if (e.Parameter.Contains('-'))
 				{
 					await Task.Delay(200);
@@ -82,19 +80,19 @@ internal class StripeSequence : Sequence<DisagSeries>
 				}
 				else
 				{
-					NewStripe();
+					NewStrip();
 				}
 
 				break;
 			case ReceiveCommandConstants.WSE:
-				this.Debug("WSE empfangen, DISAG Letzte Scheibe wurde gesendet.");
+				this.Debug($"{ReceiveCommandConstants.WSE} received, disag finished sending the last strip");
 				ReleaseAwaitingData();
 				return;
 			case ReceiveCommandConstants.STA:
-				this.Debug("STA gesendet, DISAG startet auswertung.");
+				this.Debug($"{ReceiveCommandConstants.STA} received, disag starts evaluating series.");
 				return;
 			default:
-				this.Error($"Unknown command! {e.Command}");
+				this.Error($"Unknown command received! {e.Command}");
 				break;
 		}
 	}

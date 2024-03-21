@@ -2,8 +2,8 @@
 using System.IO.Ports;
 using System.Timers;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Structs;
 using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
-using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 using Timer = System.Timers.Timer;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Serial;

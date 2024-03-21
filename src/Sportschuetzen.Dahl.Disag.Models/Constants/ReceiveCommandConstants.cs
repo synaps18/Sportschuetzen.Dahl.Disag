@@ -1,9 +1,9 @@
-﻿namespace Sportschuetzen.Dahl.Disag.Rm3.Constants;
+﻿namespace Sportschuetzen.Dahl.Disag.Models.Constants;
 
 /// <summary>
 ///     Befehle die vom DisagService empfangen werden können
 /// </summary>
-internal static class ReceiveCommandConstants
+public static class ReceiveCommandConstants
 {
     /// <summary>
     ///     Wartet auf Streifen

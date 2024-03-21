@@ -1,4 +1,4 @@
-﻿namespace Sportschuetzen.Dahl.Disag.Rm3.Structs;
+﻿namespace Sportschuetzen.Dahl.Disag.Models.Structs;
 
 /// <summary>
 ///     Response from Disag

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Structs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Sportschuetzen.Dahl.Disag.Models\Sportschuetzen.Dahl.Disag.Models.csproj" />
   </ItemGroup>
 

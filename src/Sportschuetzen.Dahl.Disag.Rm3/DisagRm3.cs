@@ -1,6 +1,6 @@
 ﻿using Serilog;
-using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
@@ -9,17 +9,17 @@ namespace Sportschuetzen.Dahl.Disag.Rm3;
 /// <inheritdoc />
 public class DisagRm3 : IDisagRm3
 {
-	private const string LOG_FILE = @"C:\ProgramData\DisagRm3\log.txt";
-
-	/// <inheritdoc />
-	public event EventHandler<bool>? IsWorkingChanged;
-
 	/// <inheritdoc />
 	public event EventHandler<bool>? ConnectionChanged
 	{
 		add => _serialHandler.OnConnectionChanged += value;
 		remove => _serialHandler.OnConnectionChanged -= value;
 	}
+
+	/// <inheritdoc />
+	public event EventHandler<bool>? IsWorkingChanged;
+
+	private const string LOG_FILE = @"C:\ProgramData\DisagRm3\log.txt";
 
 	private readonly SerialHandler _serialHandler;
 
@@ -76,17 +76,17 @@ public class DisagRm3 : IDisagRm3
 	}
 
 	/// <inheritdoc />
-	public async Task<DisagSeries> GetSeries(SeriesParameter parameter)
+	public async Task<string> GetSerialAsync()
 	{
-		using var sequence = new StripeSequence(_serialHandler, parameter);
+		using var sequence = new NumberSequence(_serialHandler);
 		var data = await RunSequence(sequence);
 		return data;
 	}
 
 	/// <inheritdoc />
-	public async Task<string> GetSerialAsync()
+	public async Task<DisagSeries> GetSeries(SeriesParameter parameter)
 	{
-		using var sequence = new NumberSequence(_serialHandler);
+		using var sequence = new StripSequence(_serialHandler, parameter);
 		var data = await RunSequence(sequence);
 		return data;
 	}

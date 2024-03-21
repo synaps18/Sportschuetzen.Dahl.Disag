@@ -1,6 +1,6 @@
 ﻿using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Structs;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
-using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 

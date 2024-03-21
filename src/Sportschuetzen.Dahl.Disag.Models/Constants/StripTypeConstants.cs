@@ -1,4 +1,4 @@
-﻿namespace Sportschuetzen.Dahl.Disag.Rm3.Constants;
+﻿namespace Sportschuetzen.Dahl.Disag.Models.Constants;
 
 /// <summary>
 ///     Auswahl verschiedener Scheibentypen
