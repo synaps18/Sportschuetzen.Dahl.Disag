@@ -56,11 +56,9 @@ internal abstract class Sequence<T> : IDisposable
 				try
 				{
 					await Task.Delay(10);
-					if (++_awaitCounter > 1000)
-					{
-						this.Error("Failed waiting data!");
-						return;
-					}
+					if (++_awaitCounter <= 1000) continue;
+					this.Error("Failed waiting data!");
+					return;
 				}
 				catch (Exception e)
 				{

@@ -1,50 +1,56 @@
 using Sportschuetzen.Dahl.Disag.Rm3;
 
-namespace Sportschuetzen.Dahl.Disag.Server
+namespace Sportschuetzen.Dahl.Disag.Server;
+
+/// <summary>
+///     Main Program
+/// </summary>
+public class Program
 {
-	public class Program
+	/// <summary>
+	///     Entry Point
+	/// </summary>
+	/// <param name="args"></param>
+	public static void Main(string[] args)
 	{
-		public static void Main(string[] args)
+		var builder = WebApplication.CreateBuilder(args);
+
+		// Add services to the container.
+		switch (builder.Environment.EnvironmentName)
 		{
-			var builder = WebApplication.CreateBuilder(args);
-
-			// Add services to the container.
-			switch (builder.Environment.EnvironmentName)
+			case "Development.Simulation":
 			{
-				case "Development.Simulation":
-				{
-					builder.Services.AddSingleton<IDisagRm3, DisagRm3Simulation>();
-					break;
-				}
-				default:
-				{
-					builder.Services.AddSingleton<IDisagRm3, DisagRm3>();
-					break;
-				}
+				builder.Services.AddSingleton<IDisagRm3, DisagRm3Simulation>();
+				break;
 			}
-
-			builder.Services.AddControllers();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
-
-			var app = builder.Build();
-
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
+			default:
 			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
+				builder.Services.AddSingleton<IDisagRm3, DisagRm3>();
+				break;
 			}
-
-			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
-
-
-			app.MapControllers();
-
-			app.Run();
 		}
+
+		builder.Services.AddControllers();
+		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddSwaggerGen();
+
+		var app = builder.Build();
+
+		// Configure the HTTP request pipeline.
+		if (app.Environment.IsDevelopment())
+		{
+			app.UseSwagger();
+			app.UseSwaggerUI();
+		}
+
+		app.UseHttpsRedirection();
+
+		app.UseAuthorization();
+
+
+		app.MapControllers();
+
+		app.Run();
 	}
 }

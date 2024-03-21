@@ -1,28 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
-using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Rm3;
 
 namespace Sportschuetzen.Dahl.Disag.Server.Controllers;
 
 /// <summary>
-/// Controller for the DisagRm3
+///     Controller for the DisagRm3
 /// </summary>
 [ApiController]
 [Route("RM3")]
 public class Rm3Controller : ControllerBase
 {
 	private readonly IDisagRm3 _rm3;
-	private readonly ILogger<Rm3Controller> _logger;
 
 	/// <summary>
-	/// Constructor
+	///     Constructor
 	/// </summary>
-	/// <param name="logger"></param>
 	/// <param name="rm3"></param>
-	public Rm3Controller(ILogger<Rm3Controller> logger, IDisagRm3 rm3)
+	public Rm3Controller(IDisagRm3 rm3)
 	{
-		_logger = logger;
 		_rm3 = rm3;
 	}
 
@@ -153,6 +150,31 @@ public class Rm3Controller : ControllerBase
 	}
 
 	/// <summary>
+	///     Gets a new series from the Disag
+	/// </summary>
+	/// <param name="streifen"> Count of stripes </param>
+	/// <param name="schuss"> Count of shots each </param>
+	/// <param name="type"> Type of stripe </param>
+	/// <param name="shotEvaluation">GR = Ganze Ringe, ZR = Zehntel Ringe, KR = Keine Ringe</param>
+	/// <param name="aufdruck"> Aufdruck </param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	[HttpGet("Get/Serie")]
+	public async Task<DisagSeries> GetSerie([FromQuery] int streifen, [FromQuery] int schuss,
+		[FromQuery] EStripType type, [FromQuery] EShotEvaluation shotEvaluation, [FromQuery] string aufdruck = "")
+	{
+		try
+		{
+			var serie = await _rm3.GetSeries(new SeriesParameter(streifen, schuss, type, shotEvaluation, aufdruck));
+			return serie;
+		}
+		catch (Exception exception)
+		{
+			throw new Exception("Could not get type", exception);
+		}
+	}
+
+	/// <summary>
 	///     Gets the type of the Disag
 	/// </summary>
 	/// <returns></returns>
@@ -164,30 +186,6 @@ public class Rm3Controller : ControllerBase
 		{
 			var type = await _rm3.GetTypeAsync();
 			return type;
-		}
-		catch (Exception exception)
-		{
-			throw new Exception("Could not get type", exception);
-		}
-	}
-
-	/// <summary>
-	///    Gets a new series from the Disag
-	/// </summary>
-	/// <param name="streifen"> Count of stripes </param>
-	/// <param name="schuss"> Count of shots each </param>
-	/// <param name="type"> Type of stripe </param>
-	/// <param name="shotEvaluation">GR = Ganze Ringe, ZR = Zehntel Ringe, KR = Keine Ringe</param>
-	/// <param name="aufdruck"> Aufdruck </param>
-	/// <returns></returns>
-	/// <exception cref="Exception"></exception>
-	[HttpGet("Get/Serie")]
-	public async Task<DisagSeries> GetSerie([FromQuery] int streifen, [FromQuery] int schuss, [FromQuery] EStripType type, [FromQuery] EShotEvaluation shotEvaluation, [FromQuery] string aufdruck = "")
-	{
-		try
-		{
-			var serie = await _rm3.GetSeries(new SeriesParameter(streifen, schuss, type, shotEvaluation, aufdruck));
-			return serie;
 		}
 		catch (Exception exception)
 		{
@@ -212,6 +210,4 @@ public class Rm3Controller : ControllerBase
 			throw new Exception("Could not repeat", exception);
 		}
 	}
-
-
 }
