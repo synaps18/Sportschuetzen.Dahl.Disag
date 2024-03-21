@@ -1,6 +1,5 @@
 # DISAG RM III
 
-Asynchroner Treiber in C# für die Kommunikation zwischen einer DISAG RM III und einem Computer über RS232 (Mit USB Adapter)
+Treiber, Server und Testrogramm um eine DISAG RM III auszulesen und zu kontrollieren
 
-
-
+Driver, server and test program to read out and check a DISAG RM III
