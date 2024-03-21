@@ -8,11 +8,25 @@ using Timer = System.Timers.Timer;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
+/// <summary>
+///     Represents a serial connection to the Disag RM3
+/// </summary>
 public class SerialConnection : IDisposable
 {
-	public event EventHandler<bool> ConnectionChanged;
-	public event EventHandler<DisagResponse> OnDataReceived;
-	public event EventHandler<EDisagHex> OnHexReceived;
+	/// <summary>
+	///     Event that is triggered when the connection state changes
+	/// </summary>
+	public event EventHandler<bool>? ConnectionChanged;
+
+	/// <summary>
+	///     Event that is triggered when data is received
+	/// </summary>
+	public event EventHandler<DisagResponse>? OnDataReceived;
+
+	/// <summary>
+	///     Event that is triggered when hex data is received
+	/// </summary>
+	public event EventHandler<EDisagHex>? OnHexReceived;
 
 	private readonly CancellationTokenSource _awaitStxSource = new();
 	private readonly SemaphoreSlim _semaphore = new(1, 1);
@@ -27,6 +41,10 @@ public class SerialConnection : IDisposable
 	private string _rawData = string.Empty;
 	private Task? _awaitStxTask;
 
+	/// <summary>
+	///     Constructor
+	/// </summary>
+	/// <param name="comPort"></param>
 	public SerialConnection(string comPort)
 	{
 		_serialPort = new SerialPort(comPort)
@@ -38,8 +56,8 @@ public class SerialConnection : IDisposable
 		};
 
 		_serialPort.DataReceived += SerialPort_DataReceived;
-		_serialPort.ErrorReceived += SerialPortOnErrorReceived;
-		_serialPort.PinChanged += SerialPortOnPinChanged;
+		_serialPort.ErrorReceived += SerialPort_OnErrorReceived;
+		_serialPort.PinChanged += SerialPort_OnPinChanged;
 
 		_observeConnectionTimer.Elapsed += ObserveConnectionTimerOnElapsed;
 		_observeConnectionTimer.Start();
@@ -47,7 +65,10 @@ public class SerialConnection : IDisposable
 		Initialize();
 	}
 
-
+	/// <summary>
+	///     Connects to the Disag
+	/// </summary>
+	/// <returns></returns>
 	public bool Connect()
 	{
 		if (_serialPort.IsOpen) _serialPort.Close();
@@ -56,6 +77,10 @@ public class SerialConnection : IDisposable
 		return _serialPort.IsOpen;
 	}
 
+	/// <summary>
+	///     Disconnects from the Disag
+	/// </summary>
+	/// <returns></returns>
 	public bool Disconnect()
 	{
 		if (!_serialPort.IsOpen) return true;
@@ -64,18 +89,23 @@ public class SerialConnection : IDisposable
 		return !_serialPort.IsOpen;
 	}
 
+	/// <inheritdoc />
 	public void Dispose()
 	{
 		_serialPort.Close();
 		_serialPort.DataReceived -= SerialPort_DataReceived;
-		_serialPort.ErrorReceived -= SerialPortOnErrorReceived;
-		_serialPort.PinChanged -= SerialPortOnPinChanged;
+		_serialPort.ErrorReceived -= SerialPort_OnErrorReceived;
+		_serialPort.PinChanged -= SerialPort_OnPinChanged;
 		_serialPort.Dispose();
 
 		this.Debug("Disposed!");
 	}
 
-	public void SetBaud(EDisagBaudrate baud)
+	/// <summary>
+	///     Sets the baud rate of the serial port
+	/// </summary>
+	/// <param name="baud"></param>
+	public void SetBaud(EDisagBaudRate baud)
 	{
 		if (_serialPort.BaudRate == (int)baud) return;
 
@@ -94,7 +124,15 @@ public class SerialConnection : IDisposable
 		}
 	}
 
-	public async Task WriteToSerial(byte[] dataToSend, EDisagBaudrate baud, bool cr, bool awaitStx = false)
+	/// <summary>
+	///     Writes data to the serial port
+	/// </summary>
+	/// <param name="dataToSend"></param>
+	/// <param name="baud"></param>
+	/// <param name="cr"></param>
+	/// <param name="awaitStx"></param>
+	/// <returns></returns>
+	public async Task WriteToSerial(byte[] dataToSend, EDisagBaudRate baud, bool cr, bool awaitStx = false)
 	{
 		await _semaphore.WaitAsync();
 
@@ -125,6 +163,11 @@ public class SerialConnection : IDisposable
 		}
 	}
 
+	/// <summary>
+	///     Awaits the STX (Start of Text) byte
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	private async Task AwaitStxAsync()
 	{
 		if (_awaitStxTask?.Status == TaskStatus.Running)
@@ -170,7 +213,7 @@ public class SerialConnection : IDisposable
 					this.Debug("CR received!");
 					var response = _rawData.ParseToDisagResponse();
 
-					await WriteToSerial(new[] { (byte)EDisagHex.ACK }, EDisagBaudrate.B_38400, false);
+					await WriteToSerial(new[] { (byte)EDisagHex.ACK }, EDisagBaudRate.B38400, false);
 
 					OnDataReceived?.Invoke(this, response);
 					_rawData = string.Empty;
@@ -212,7 +255,7 @@ public class SerialConnection : IDisposable
 			if (_serialPort.IsOpen == _lastConnectionState) return;
 
 			_lastConnectionState = _serialPort.IsOpen;
-			RaiseOnConnectionChanged(_serialPort.IsOpen);
+			OnConnectionChanged(_serialPort.IsOpen);
 		}
 		catch (Exception exception)
 		{
@@ -220,7 +263,7 @@ public class SerialConnection : IDisposable
 		}
 	}
 
-	protected virtual void RaiseOnConnectionChanged(bool e)
+	protected virtual void OnConnectionChanged(bool e)
 	{
 		ConnectionChanged?.Invoke(this, e);
 	}
@@ -236,15 +279,15 @@ public class SerialConnection : IDisposable
 		CheckReceivedBytes(buffer);
 	}
 
-	private void SerialPortOnErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+	private void SerialPort_OnErrorReceived(object sender, SerialErrorReceivedEventArgs e)
 	{
-		//TODO Dieses Event ist nur da um festzustellen, ob auf dem Port ein Event gefeuert wird, sollte die Verbinudng abreißen
+		//TODO This event is only there to determine whether an event is fired on the port if the connection is lost
 		this.Warning($"SerialPortOnErrorReceived: Event type [{e.EventType}]");
 	}
 
-	private void SerialPortOnPinChanged(object sender, SerialPinChangedEventArgs e)
+	private void SerialPort_OnPinChanged(object sender, SerialPinChangedEventArgs e)
 	{
-		//TODO Dieses Event ist nur da um festzustellen, ob auf dem Port ein Event gefeuert wird, sollte die Verbinudng abreißen
+		//TODO This event is only there to determine whether an event is fired on the port if the connection is lost
 		this.Warning($"SerialPortOnPinChanged: Event type [{e.EventType}]");
 	}
 }

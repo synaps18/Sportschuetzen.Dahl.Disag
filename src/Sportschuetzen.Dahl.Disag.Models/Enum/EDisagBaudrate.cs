@@ -1,7 +1,17 @@
 ﻿namespace Sportschuetzen.Dahl.Disag.Models.Enum;
 
-public enum EDisagBaudrate
+/// <summary>
+///     Baud rates supported by Disag device
+/// </summary>
+public enum EDisagBaudRate
 {
-    B_2400 = 2400,
-    B_38400 = 38400,
+	/// <summary>
+	///     Switching modes
+	/// </summary>
+	B2400 = 2400,
+
+	/// <summary>
+	///     Default baud rate
+	/// </summary>
+	B38400 = 38400
 }

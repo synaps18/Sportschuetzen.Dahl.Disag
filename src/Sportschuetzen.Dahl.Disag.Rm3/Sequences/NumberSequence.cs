@@ -6,30 +6,30 @@ using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 
-internal class MachineTypeSequence : Sequence<string>
+internal class NumberSequence : Sequence<string>
 {
-	private string? _receivedMachineType;
+	private string? _receivedSerialNumber;
 
-	public MachineTypeSequence(SerialHandler serialHandler) : base(serialHandler)
+	public NumberSequence(SerialHandler serialHandler) : base(serialHandler)
 	{
 	}
 
 	protected override async Task<string> SequenceToCall()
 	{
-		await SerialHandler.Send(EDisagCommand.TYP);
+		await SerialHandler.Send(EDisagCommand.SNR);
 
 		await AwaitDataAsync();
 
-		return _receivedMachineType!;
+		return _receivedSerialNumber!;
 	}
 
 	protected override async void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
 	{
 		base.SerialHandler_OnDataReceived(sender, e);
 
-		if (e.Command == EDisagCommand.TYP.ToString())
+		if (e.Command == EDisagCommand.SNR.ToString())
 		{
-			_receivedMachineType = e.Parameter;
+			_receivedSerialNumber = e.Parameter;
 		}
 		else if (e.Command == DISAG_Befehle_Empfangen.WSC)
 		{

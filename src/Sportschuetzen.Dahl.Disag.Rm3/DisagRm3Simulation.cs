@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+﻿using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3;
 
@@ -11,7 +11,7 @@ public class DisagRm3Simulation : IDisagRm3
 	///<inheritdoc />
 	public event EventHandler<bool>? IsWorkingChanged;
 
-	private const int DisagDefaultTimeout = 200;
+	private const int DISAG_DEFAULT_TIMEOUT = 200;
 
 	///<inheritdoc />
 	public async Task CancelAsync()
@@ -60,19 +60,19 @@ public class DisagRm3Simulation : IDisagRm3
 	}
 
 	///<inheritdoc />
-	public async Task<DisagSerie> GetSeries(SeriesParameter parameter)
+	public async Task<DisagSeries> GetSeries(SeriesParameter parameter)
 	{
-		var result = await InvokeDisag(() => Task.FromResult(new DisagSerie
+		var result = await InvokeDisag(() => Task.FromResult(new DisagSeries
 		{
-			Streifen = new List<DisagStreifen>
+			Stripes = new List<DisagStrip>
 			{
 				new()
 				{
-					Spiegel = new List<DisagSpiegel>
+					BullsEyes = new List<DisagBullsEye>
 					{
 						new()
 						{
-							Schüsse = new List<DisagSchuss>
+							Shots = new List<DisagShot>
 							{
 								new()
 							}
@@ -97,15 +97,8 @@ public class DisagRm3Simulation : IDisagRm3
 		await InvokeDisag(() => Task.CompletedTask);
 	}
 
-	private void InvokeDisag(Action action, int timeout = DisagDefaultTimeout)
-	{
-		OnIsWorkingChanged(true);
-		Thread.Sleep(timeout);
-		action();
-		OnIsWorkingChanged(false);
-	}
 
-	private async Task InvokeDisag(Func<Task> action, int timeout = DisagDefaultTimeout)
+	private async Task InvokeDisag(Func<Task> action, int timeout = DISAG_DEFAULT_TIMEOUT)
 	{
 		OnIsWorkingChanged(true);
 		await Task.Delay(timeout);
@@ -113,7 +106,7 @@ public class DisagRm3Simulation : IDisagRm3
 		OnIsWorkingChanged(false);
 	}
 
-	private T InvokeDisag<T>(Func<T> action, int timeout = DisagDefaultTimeout)
+	private T InvokeDisag<T>(Func<T> action, int timeout = DISAG_DEFAULT_TIMEOUT)
 	{
 		OnIsWorkingChanged(true);
 		Thread.Sleep(timeout);
@@ -122,7 +115,7 @@ public class DisagRm3Simulation : IDisagRm3
 		return result;
 	}
 
-	private async Task<T> InvokeDisag<T>(Func<Task<T>> action, int timeout = DisagDefaultTimeout)
+	private async Task<T> InvokeDisag<T>(Func<Task<T>> action, int timeout = DISAG_DEFAULT_TIMEOUT)
 	{
 		OnIsWorkingChanged(true);
 		await Task.Delay(timeout);

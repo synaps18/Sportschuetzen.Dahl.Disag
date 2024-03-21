@@ -1,5 +1,5 @@
 ﻿using Serilog;
-using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
@@ -9,7 +9,7 @@ namespace Sportschuetzen.Dahl.Disag.Rm3;
 /// <inheritdoc />
 public class DisagRm3 : IDisagRm3
 {
-	private const string LogFile = @"C:\ProgramData\DisagRm3\log.txt";
+	private const string LOG_FILE = @"C:\ProgramData\DisagRm3\log.txt";
 
 	/// <inheritdoc />
 	public event EventHandler<bool>? IsWorkingChanged;
@@ -31,7 +31,7 @@ public class DisagRm3 : IDisagRm3
 	{
 		Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
-			.WriteTo.File(LogFile)
+			.WriteTo.File(LOG_FILE)
 			.CreateLogger();
 
 		_serialHandler = new SerialHandler(comPort);
@@ -41,7 +41,7 @@ public class DisagRm3 : IDisagRm3
 	public async Task CancelAsync()
 	{
 		using var sequence = new CancelSequence(_serialHandler);
-		var data = await RunSequence(sequence);
+		await RunSequence(sequence);
 	}
 
 	/// <inheritdoc />
@@ -60,7 +60,7 @@ public class DisagRm3 : IDisagRm3
 	public async Task EndAsync()
 	{
 		using var sequence = new EndSequence(_serialHandler);
-		var data = await RunSequence(sequence);
+		await RunSequence(sequence);
 	}
 
 	/// <inheritdoc />
@@ -76,9 +76,9 @@ public class DisagRm3 : IDisagRm3
 	}
 
 	/// <inheritdoc />
-	public async Task<DisagSerie> GetSeries(SeriesParameter parameter)
+	public async Task<DisagSeries> GetSeries(SeriesParameter parameter)
 	{
-		using var sequence = new StreifenSequence(_serialHandler, parameter);
+		using var sequence = new StripeSequence(_serialHandler, parameter);
 		var data = await RunSequence(sequence);
 		return data;
 	}
@@ -86,7 +86,7 @@ public class DisagRm3 : IDisagRm3
 	/// <inheritdoc />
 	public async Task<string> GetSerialAsync()
 	{
-		using var sequence = new SerialNumberSequence(_serialHandler);
+		using var sequence = new NumberSequence(_serialHandler);
 		var data = await RunSequence(sequence);
 		return data;
 	}
@@ -102,7 +102,7 @@ public class DisagRm3 : IDisagRm3
 	/// <inheritdoc />
 	public async Task RepeatAsync()
 	{
-		await _serialHandler.Send(EDisagBefehle.WID);
+		await _serialHandler.Send(EDisagCommand.WID);
 	}
 
 	protected virtual void OnIsWorkingChanged(bool e)
@@ -110,7 +110,7 @@ public class DisagRm3 : IDisagRm3
 		IsWorkingChanged?.Invoke(this, e);
 	}
 
-	private async Task<T> RunSequence<T>(SerialSequence<T> sequence)
+	private async Task<T> RunSequence<T>(Sequence<T> sequence)
 	{
 		OnIsWorkingChanged(true);
 		var data = await sequence.RequestData();

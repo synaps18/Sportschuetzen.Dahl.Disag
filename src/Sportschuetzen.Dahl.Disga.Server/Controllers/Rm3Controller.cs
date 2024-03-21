@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Rm3;
 
@@ -117,7 +117,7 @@ public class Rm3Controller : ControllerBase
 	}
 
 	/// <summary>
-	///     Sets Disag to Win Mode
+	///     Sets Disag to normal Mode
 	/// </summary>
 	/// <exception cref="Exception"></exception>
 	[HttpPost("Do/Fern")]
@@ -177,16 +177,16 @@ public class Rm3Controller : ControllerBase
 	/// <param name="streifen"> Count of stripes </param>
 	/// <param name="schuss"> Count of shots each </param>
 	/// <param name="type"> Type of stripe </param>
-	/// <param name="ringauswertung">GR = Ganze Ringe, ZR = Zehntel Ringe, KR = Keine Ringe</param>
+	/// <param name="shotEvaluation">GR = Ganze Ringe, ZR = Zehntel Ringe, KR = Keine Ringe</param>
 	/// <param name="aufdruck"> Aufdruck </param>
 	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
 	[HttpGet("Get/Serie")]
-	public async Task<DisagSerie> GetSerie([FromQuery] int streifen, [FromQuery] int schuss, [FromQuery] EScheibentyp type, [FromQuery] ERingauswertung ringauswertung, [FromQuery] string aufdruck = "")
+	public async Task<DisagSeries> GetSerie([FromQuery] int streifen, [FromQuery] int schuss, [FromQuery] EStripType type, [FromQuery] EShotEvaluation shotEvaluation, [FromQuery] string aufdruck = "")
 	{
 		try
 		{
-			var serie = await _rm3.GetSeries(new SeriesParameter(streifen, schuss, type, ringauswertung, aufdruck));
+			var serie = await _rm3.GetSeries(new SeriesParameter(streifen, schuss, type, shotEvaluation, aufdruck));
 			return serie;
 		}
 		catch (Exception exception)

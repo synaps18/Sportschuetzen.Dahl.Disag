@@ -3,30 +3,30 @@ using Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 
-internal class CancelSequence : SerialSequence<string>
+internal class CancelSequence : Sequence<string>
 {
-    public CancelSequence(SerialHandler serialHandler) : base(serialHandler)
-    {
-        SerialHandler.OnHexReceived += SerialHandlerOnHexReceived;
-    }
+	public CancelSequence(SerialHandler serialHandler) : base(serialHandler)
+	{
+		SerialHandler.OnHexReceived += SerialHandler_OnHexReceived;
+	}
 
-    public override void Dispose()
-    {
-        SerialHandler.OnHexReceived -= SerialHandlerOnHexReceived;
-        base.Dispose();
-    }
+	public override void Dispose()
+	{
+		SerialHandler.OnHexReceived -= SerialHandler_OnHexReceived;
+		base.Dispose();
+	}
 
-    private void SerialHandlerOnHexReceived(object? sender, EDisagHex e)
-    {
-        if (e == EDisagHex.ACK) ReleaseAwaitingData();
-    }
+	protected override async Task<string> SequenceToCall()
+	{
+		await SerialHandler.Send(EDisagCommand.ABR);
 
-    protected override async Task<string> SequenceToCall()
-    {
-        await SerialHandler.Send(EDisagBefehle.ABR);
+		await AwaitDataAsync();
 
-        await AwaitDataAsync();
+		return string.Empty;
+	}
 
-        return string.Empty;
-    }
+	private void SerialHandler_OnHexReceived(object? sender, EDisagHex e)
+	{
+		if (e == EDisagHex.ACK) ReleaseAwaitingData();
+	}
 }

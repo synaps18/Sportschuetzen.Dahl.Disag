@@ -4,29 +4,29 @@ using Sportschuetzen.Dahl.Disag.Rm3.Structs;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 
-internal class EndSequence : SerialSequence<string>
+internal class EndSequence : Sequence<string>
 {
-    private string? _receivedData;
+	private string? _receivedData;
 
-    public EndSequence(SerialHandler serialHandler) : base(serialHandler)
-    {
-    }
+	public EndSequence(SerialHandler serialHandler) : base(serialHandler)
+	{
+	}
 
-    protected override void SerialWrapper_OnDataReceived(object? sender, DisagResponse e)
-    {
-        base.SerialWrapper_OnDataReceived(sender, e);
+	protected override async Task<string> SequenceToCall()
+	{
+		await SerialHandler.Send(EDisagCommand.END);
 
-        _receivedData = !string.IsNullOrEmpty(e.Parameter) ? e.Parameter : e.Command;
+		await AwaitDataAsync();
 
-        ReleaseAwaitingData();
-    }
+		return _receivedData!;
+	}
 
-    protected override async Task<string> SequenceToCall()
-    {
-        await SerialHandler.Send(EDisagBefehle.END);
+	protected override void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
+	{
+		base.SerialHandler_OnDataReceived(sender, e);
 
-        await AwaitDataAsync();
+		_receivedData = !string.IsNullOrEmpty(e.Parameter) ? e.Parameter : e.Command;
 
-        return _receivedData!;
-    }
+		ReleaseAwaitingData();
+	}
 }

@@ -1,4 +1,4 @@
-﻿using Sportschuetzen.Dahl.Disag.Models.Auswertung;
+﻿using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3;
 
@@ -56,7 +56,7 @@ public interface IDisagRm3
 	/// </summary>
 	/// <param name="parameter"></param>
 	/// <returns></returns>
-	Task<DisagSerie> GetSeries(SeriesParameter parameter);
+	Task<DisagSeries> GetSeries(SeriesParameter parameter);
 
 	/// <summary>
 	///     Gets the serial number of the Disag
