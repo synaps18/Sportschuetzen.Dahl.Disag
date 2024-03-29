@@ -11,28 +11,28 @@ public static class ReceiveCommandConstants
     ///     Nach diesem Befehl kann kann ein neuer Einstellstring gesendet werden.
     ///     Ist das Vorzeichen negativ wartet die RM auf EDITIERUNG des Ergebnisses
     /// </summary>
-    public const string WSC = "WSC";
+    public static readonly string WSC = "WSC";
 
     /// <summary>
     ///     Meldung
     ///     MEL=Bitte Streifen zum Bedrucken einlegen
     /// </summary>
-    public const string MEL = "MEL";
+    public static readonly string MEL = "MEL";
 
     /// <summary>
     ///     Auswerte Start
     /// </summary>
-    public const string STA = "STA";
+    public static readonly string STA = "STA";
 
     /// <summary>
     ///     Wartet auf Stripes Ende
     ///     WSE wird geschickt nachdem die letzte Stripes gewertet wurd.
     ///     Danach nimmt die RM keine Stripes mehr an, bis eine neue Einstellung geschickt wurde.
     /// </summary>
-    public const string WSE = "WSE"; //Warte auf Stripes Ende
+    public static readonly string WSE = "WSE"; //Warte auf Stripes Ende
 
     /// <summary>
     ///     Schuss
     /// </summary>
-    public const string SCH = "SCH";
+    public static readonly string SCH = "SCH";
 }
