@@ -14,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        push: true
     - name: Build the Docker image
       working-directory: src/Sportschuetzen.Dahl.Disga.Server
       run: docker build . --tag disag-rm3-server:$(date +%s)
