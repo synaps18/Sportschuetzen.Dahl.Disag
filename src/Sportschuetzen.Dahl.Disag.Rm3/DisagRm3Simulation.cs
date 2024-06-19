@@ -1,4 +1,5 @@
-﻿using Sportschuetzen.Dahl.Disag.Models.Evaluation;
+﻿using Sportschuetzen.Dahl.Disag.Models.Enum;
+using Sportschuetzen.Dahl.Disag.Models.Evaluation;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3;
 
@@ -62,25 +63,33 @@ public class DisagRm3Simulation : IDisagRm3
 	///<inheritdoc />
 	public async Task<DisagSeries> GetSeries(SeriesParameter parameter)
 	{
-		var result = await InvokeDisag(() => Task.FromResult(new DisagSeries
-		{
-			Stripes = new List<DisagStrip>
+		
+		var result = await InvokeDisag(
+			() =>
 			{
-				new()
+				var rnd = new Random();
+
+				var series = new DisagSeries
 				{
-					BullsEyes = new List<DisagBullsEye>
+					Stripes = Enumerable.Range(0, parameter.NumberOfStrips).Select(_ => new DisagStrip()
 					{
-						new()
+						BullsEyes = Enumerable.Range(0, (int)parameter.StripType).Select(_ => new DisagBullsEye()
 						{
-							Shots = new List<DisagShot>
+							Shots = Enumerable.Range(0, parameter.ShotsPerBullsEye).Select(a => new DisagShot()
 							{
-								new()
-							}
-						}
-					}
-				}
-			}
-		}), 3000);
+								Value = rnd.Next(20, 109) / 10.0,
+								Validity = EDisagValidity.G,
+								Angle = rnd.Next(0, 3600) / 10.0,
+								Number = a
+							}).ToList()
+						}).ToList(),
+						Type = parameter.StripType,
+					}).ToList()
+				};
+
+
+				return Task.FromResult(series);
+			}, 3000);
 
 		return result;
 	}
