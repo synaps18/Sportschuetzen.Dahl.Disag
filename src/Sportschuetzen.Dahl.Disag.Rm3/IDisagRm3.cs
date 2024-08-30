@@ -42,12 +42,12 @@ public interface IDisagRm3
 	Task EndAsync();
 
 	/// <summary>
-	///     Sets Disag to Win Mode
+	///     Sets Disag to Windows remote control Mode
 	/// </summary>
 	Task FEr();
 
 	/// <summary>
-	///     Sets Disag to Win Mode
+	///     Sets Disag to conventional remote control Mode
 	/// </summary>
 	Task FErn();
 
@@ -75,4 +75,10 @@ public interface IDisagRm3
 	/// </summary>
 	/// <returns></returns>
 	Task RepeatAsync();
+
+	/// <summary>
+	///    Exits the Disag FEr mode  and returns to manual mode
+	/// </summary>
+	/// <returns></returns>
+	Task ExitAsync();
 }

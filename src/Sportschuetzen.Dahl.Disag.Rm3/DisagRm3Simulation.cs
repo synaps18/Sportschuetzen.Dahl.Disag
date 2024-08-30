@@ -106,6 +106,11 @@ public class DisagRm3Simulation : IDisagRm3
 		await InvokeDisag(() => Task.CompletedTask);
 	}
 
+	public Task ExitAsync()
+	{
+		return InvokeDisag(() => Task.CompletedTask);
+	}
+
 
 	private async Task InvokeDisag(Func<Task> action, int timeout = DISAG_DEFAULT_TIMEOUT)
 	{

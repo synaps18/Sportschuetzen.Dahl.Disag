@@ -105,6 +105,11 @@ public class DisagRm3 : IDisagRm3
 		await _serialHandler.Send(EDisagCommand.WID);
 	}
 
+	public async Task ExitAsync()
+	{
+		await _serialHandler.Send(EDisagCommand.EXIT);
+	}
+
 	protected virtual void OnIsWorkingChanged(bool e)
 	{
 		IsWorkingChanged?.Invoke(this, e);
