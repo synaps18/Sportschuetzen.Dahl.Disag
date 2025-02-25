@@ -56,15 +56,17 @@ internal class StripSequence : Sequence<DisagSeries>
 		this.Debug($"Send Stripe Info: {serialString}");
 		await SerialHandler.Send(serialString);
 
+
 		await AwaitDataAsync();
 
 		return _disagSeries;
 	}
 
-	protected override async void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
+
+	protected override async void SerialHandler_OnDataReceived(object? sender, DisagCommand e)
 	{
 		base.SerialHandler_OnDataReceived(sender, e);
-
+		
 		switch (e.Command)
 		{
 			case ReceiveCommandConstants.SCH:

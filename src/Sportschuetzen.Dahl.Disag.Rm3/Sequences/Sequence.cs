@@ -52,6 +52,7 @@ internal abstract class Sequence<T> : IDisposable
 		_awaitingDataTask = Task.Run(async () =>
 		{
 			this.Debug("Awaiting Data");
+
 			while (AwaitingData & !token.IsCancellationRequested)
 				try
 				{
@@ -84,7 +85,7 @@ internal abstract class Sequence<T> : IDisposable
 
 	protected abstract Task<T> SequenceToCall();
 
-	protected virtual void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
+	protected virtual void SerialHandler_OnDataReceived(object? sender, DisagCommand e)
 	{
 		KeepWaitingDataAlive();
 	}

@@ -15,12 +15,12 @@ public static class StringExtensions
 	/// </summary>
 	/// <param name="rawData"></param>
 	/// <returns></returns>
-	public static DisagResponse ParseToDisagResponse(this string rawData)
+	public static DisagCommand ToDisagResponse(this string rawData)
 	{
 		var cleanedData = rawData.RemoveCr();
-		var response = new DisagResponse();
+		var response = new DisagCommand();
 
-		rawData.Debug($"Parsing [{rawData}] to {typeof(DisagResponse)}");
+		rawData.Debug($"Parsing [{rawData}] to {typeof(DisagCommand)}");
 		if (cleanedData.Contains("="))
 		{
 			response.Command = cleanedData.Split("=")[0];
@@ -32,6 +32,20 @@ public static class StringExtensions
 		}
 
 		return response;
+	}
+
+	/// <summary>
+	///     Removes the CR from a string
+	/// </summary>
+	/// <param name="data"></param>
+	/// <returns></returns>
+	public static string RemoveChecksum(this string data)
+	{
+		data.Debug($"Removing CR: [{data}]");
+		var removed = data.Remove(data.Length - 1);
+		data.Debug($"Removed CR: [{removed}]");
+
+		return removed;
 	}
 
 	/// <summary>

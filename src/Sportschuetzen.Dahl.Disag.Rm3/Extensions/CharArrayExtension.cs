@@ -10,7 +10,7 @@ public static class CharArrayExtension
 	/// </summary>
 	/// <param name="packetData"></param>
 	/// <returns></returns>
-	public static byte CalCheckSum(this char[] packetData)
+	public static byte CalCheckSum(this IEnumerable<char> packetData)
 	{
 		byte checkSumByte = 0x00;
 

@@ -21,7 +21,7 @@ internal class RepeatSequence : Sequence<string>
 		return _receivedData!;
 	}
 
-	protected override void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
+	protected override void SerialHandler_OnDataReceived(object? sender, DisagCommand e)
 	{
 		base.SerialHandler_OnDataReceived(sender, e);
 

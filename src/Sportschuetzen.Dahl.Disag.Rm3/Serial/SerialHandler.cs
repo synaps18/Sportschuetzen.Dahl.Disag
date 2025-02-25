@@ -21,7 +21,7 @@ public class SerialHandler : IDisposable
 	/// <summary>
 	///     Event that is triggered when data is received
 	/// </summary>
-	public event EventHandler<DisagResponse>? OnDataReceived
+	public event EventHandler<DisagCommand>? OnDataReceived
 	{
 		add => _serialConnection.OnDataReceived += value;
 		remove => _serialConnection.OnDataReceived -= value;
@@ -84,6 +84,7 @@ public class SerialHandler : IDisposable
 
 		this.Debug("Sending STRING: " + data);
 		await _serialConnection.WriteToSerial(dataAsByteArray, EDisagBaudRate.B38400, true);
+
 	}
 
 	/// <summary>

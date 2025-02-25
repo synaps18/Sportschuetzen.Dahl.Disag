@@ -23,7 +23,7 @@ internal class MachineTypeSequence : Sequence<string>
 		return _receivedMachineType!;
 	}
 
-	protected override async void SerialHandler_OnDataReceived(object? sender, DisagResponse e)
+	protected override async void SerialHandler_OnDataReceived(object? sender, DisagCommand e)
 	{
 		base.SerialHandler_OnDataReceived(sender, e);
 

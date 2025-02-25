@@ -23,4 +23,37 @@ public static class ByteArrayExtensions
 
 		return withCr;
 	}
+
+
+	public static byte[] RemoveChecksumAndCr(this byte[] bytes)
+	{
+		return bytes.SkipLast(2).ToArray();
+	}
+
+	public static bool ValidateChecksum(this byte[] bytes)
+	{
+		var lastElementIsCr = bytes.LastOrDefault() == (byte)EDisagHex.CR;
+		var receivedChecksum = lastElementIsCr ? bytes[^2] : bytes[^1];
+
+		var bytesWithoutChecksum = bytes.RemoveChecksumAndCr().ToCharArray();
+		var calculatedChecksum = bytesWithoutChecksum.CalCheckSum();
+
+		return receivedChecksum == calculatedChecksum;
+	}
+
+	public static char[] ToCharArray(this byte[] bytes)
+	{
+		return bytes.RemoveChecksumAndCr().Select(a => (char)a).ToArray();
+	}
+
+	public static string AsString(this byte[] bytes)
+	{
+		var characters = bytes.Select(a => (char)a);
+		var rawString = new string(characters.ToArray());
+
+		var stringWithoutCr = rawString.RemoveCr();
+		var stringWithoutChecksum = rawString.RemoveChecksum();
+
+		return new string(characters.ToArray());
+	}
 }

@@ -3,7 +3,7 @@
 /// <summary>
 ///     Response from Disag
 /// </summary>
-public struct DisagResponse
+public struct DisagCommand
 {
 	/// <summary>
 	///     Command from Disag

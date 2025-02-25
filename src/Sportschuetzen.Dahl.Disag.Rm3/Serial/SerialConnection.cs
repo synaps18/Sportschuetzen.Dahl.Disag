@@ -21,7 +21,7 @@ public class SerialConnection : IDisposable
 	/// <summary>
 	///     Event that is triggered when data is received
 	/// </summary>
-	public event EventHandler<DisagResponse>? OnDataReceived;
+	public event EventHandler<DisagCommand>? OnDataReceived;
 
 	/// <summary>
 	///     Event that is triggered when hex data is received
@@ -29,6 +29,7 @@ public class SerialConnection : IDisposable
 	public event EventHandler<EDisagHex>? OnHexReceived;
 
 	private readonly CancellationTokenSource _awaitStxSource = new();
+	private readonly CancellationTokenSource _awaitAckSource = new();
 	private readonly SemaphoreSlim _semaphore = new(1, 1);
 	private readonly SerialPort _serialPort;
 
@@ -40,6 +41,7 @@ public class SerialConnection : IDisposable
 	private bool _lastConnectionState;
 	private string _rawData = string.Empty;
 	private Task? _awaitStxTask;
+	private Task? _awaitAckTask;
 
 	/// <summary>
 	///     Constructor
@@ -151,6 +153,7 @@ public class SerialConnection : IDisposable
 			_serialPort.Write(dataToSend, 0, dataToSend.Length);
 
 			if (awaitStx) await AwaitStxAsync();
+			if (!awaitStx) await AwaitAckAsync();
 		}
 		catch (Exception exception)
 		{
@@ -160,6 +163,45 @@ public class SerialConnection : IDisposable
 		finally
 		{
 			_semaphore.Release();
+		}
+	}
+
+	/// <summary>
+	///     Awaits the STX (Start of Text) byte
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	private async Task AwaitAckAsync()
+	{
+		if (_awaitAckTask?.Status == TaskStatus.Running)
+		{
+			this.Error("Cannot wait two times for ACK!");
+			throw new Exception("Cannot wait two times for ACK!");
+		}
+
+		_awaitAckTask = Task.Run(() =>
+		{
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+
+			this.Debug("Awaiting ACK");
+			while (!_awaitAckSource.IsCancellationRequested)
+			{
+				if (stopwatch.ElapsedMilliseconds < 300) continue;
+				this.Warning("ACK not received!");
+				return;
+			}
+
+			this.Debug("ACK received!");
+		});
+
+		try
+		{
+			await _awaitAckTask.WaitAsync(CancellationToken.None);
+		}
+		catch (Exception e)
+		{
+			this.Error("Task was canceled while waiting on it!", e);
 		}
 	}
 
@@ -211,7 +253,7 @@ public class SerialConnection : IDisposable
 			{
 				case (byte)EDisagHex.CR:
 					this.Debug("CR received!");
-					var response = _rawData.ParseToDisagResponse();
+					var response = _rawData.ToDisagResponse();
 
 					await WriteToSerial(new[] { (byte)EDisagHex.ACK }, EDisagBaudRate.B38400, false);
 

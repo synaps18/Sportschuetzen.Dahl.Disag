@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Models.Evaluation;
+using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 using Sportschuetzen.Dahl.Disag.Rm3.Sequences;
 using Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
@@ -9,6 +10,9 @@ namespace Sportschuetzen.Dahl.Disag.Rm3;
 /// <inheritdoc />
 public class DisagRm3 : IDisagRm3
 {
+	
+	public string ComPort { get; }
+
 	/// <inheritdoc />
 	public event EventHandler<bool>? ConnectionChanged
 	{
@@ -29,6 +33,9 @@ public class DisagRm3 : IDisagRm3
 	/// <param name="comPort"> Comport to use for disag </param>
 	public DisagRm3(string comPort)
 	{
+		LoggerExtension.EnableLog = true;
+
+		ComPort = comPort;
 		Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
 			.WriteTo.File(LOG_FILE)
@@ -47,7 +54,13 @@ public class DisagRm3 : IDisagRm3
 	/// <inheritdoc />
 	public bool Connect()
 	{
-		return _serialHandler.Connect();
+		var connected = _serialHandler.Connect();
+
+		Console.WriteLine(connected
+			? $"Connected to disag on port '{ComPort}'"
+			: $"Connection to disag on port '{ComPort}' failed!");
+
+		return connected;
 	}
 
 	/// <inheritdoc />

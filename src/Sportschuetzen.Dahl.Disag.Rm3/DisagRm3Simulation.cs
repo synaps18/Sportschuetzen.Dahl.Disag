@@ -77,7 +77,7 @@ public class DisagRm3Simulation : IDisagRm3
 						{
 							Shots = Enumerable.Range(0, parameter.ShotsPerBullsEye).Select(a => new DisagShot()
 							{
-								Value = rnd.Next(20, 109) / 10.0,
+								Value = rnd.Next(70, 109) / 10.0,
 								Validity = EDisagValidity.G,
 								Angle = rnd.Next(0, 3600) / 10.0,
 								Number = a

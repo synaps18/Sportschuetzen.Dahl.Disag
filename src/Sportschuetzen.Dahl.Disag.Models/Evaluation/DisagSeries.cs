@@ -35,7 +35,7 @@ public class DisagSeries
 	/// <summary>
 	///     Strips of the series
 	/// </summary>
-	public List<DisagStrip>? Stripes { get; set; } = new();
+	public List<DisagStrip> Stripes { get; set; } = new();
 
 	/// <summary>
 	///     Text to print on each the strip

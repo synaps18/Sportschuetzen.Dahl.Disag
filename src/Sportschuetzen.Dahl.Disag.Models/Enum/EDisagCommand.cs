@@ -43,5 +43,11 @@ public enum EDisagCommand
 	/// <summary>
 	///     Exits remote mode (Fern)
 	/// </summary>
-	EXIT
+	EXIT,
+
+	/// <summary>
+	///    Print a text on the Disag
+	/// </summary>
+	DRT
+
 }
