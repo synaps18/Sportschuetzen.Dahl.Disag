@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sportschuetzen.Dahl.Disag.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sportschuetzen.Dahl.Disag.Server", "Sportschuetzen.Dahl.Disga.Server\Sportschuetzen.Dahl.Disag.Server.csproj", "{42F2C3C0-99D5-428F-A351-3368D1C36731}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sportschuetzen.Dahl.Disag.Development", "Sportschuetzen.Dahl.Disag.Development\Sportschuetzen.Dahl.Disag.Development.csproj", "{704EBE4A-E776-41F2-A6F3-3448C7E052E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42F2C3C0-99D5-428F-A351-3368D1C36731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704EBE4A-E776-41F2-A6F3-3448C7E052E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704EBE4A-E776-41F2-A6F3-3448C7E052E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704EBE4A-E776-41F2-A6F3-3448C7E052E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704EBE4A-E776-41F2-A6F3-3448C7E052E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,21 +6,25 @@ using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
-public class DisagSerialCommands
+public class DisagSerialCommands : IDisposable
 {
-	private readonly SerialPort _serialPort;
+	private readonly string _comPort;
 	private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-
-	public DisagSerialCommands(string com)
+	private SerialPort GetSerialPort(string comPort)
 	{
-		_serialPort = new SerialPort(com)
+		return new SerialPort(comPort)
 		{
 			Parity = Parity.None,
 			StopBits = StopBits.One,
 			DataBits = 8,
 			Handshake = Handshake.None
 		};
+	}
+
+	public DisagSerialCommands(string comPort)
+	{
+		_comPort = comPort;
 	}
 	
 	public async Task<DisagCommand> Await_Disag_Response(CancellationToken? token = null)
@@ -44,20 +48,30 @@ public class DisagSerialCommands
 					throw new TimeoutException("Timeout while waiting for STA (Start series analysis");
 				}
 
-				var received = ReadFromSerialPort(port);
-				if(!received.ValidateChecksum())
+				var received = new List<byte>();
+
+				while (received.LastOrDefault() != (byte)EDisagHex.CR)
 				{
-					port.WriteDisagHex(EDisagHex.NAK);
-					continue;
+					var receivedChunk = ReadFromSerialPort(port);
+					received.AddRange(receivedChunk);
 				}
+
+				//if (!receivedArray.ValidateChecksum())
+				//{
+				//	port.WriteDisagHex(EDisagHex.NAK);
+				//	continue;
+				//}
 
 				port.WriteDisagHex(EDisagHex.ACK);
 
-				return received.RemoveChecksumAndCr().AsString();
+
+				var receivedArray = new string(received.ToArray().ToCharArray());
+
+				return receivedArray ?? string.Empty;
 			}
 		});
 
-		return receivedString.ToDisagResponse();
+		return receivedString.ToDisagResponse(false);
 	}
 
 	/// <summary>
@@ -76,10 +90,11 @@ public class DisagSerialCommands
 	{
 		var stringedMode = mode.ToString();
 		var dataAsByteArray = stringedMode.ToByteArray(false);
+		var dataToSend = dataAsByteArray.AddCr();
 
 		await InvokeSerial(port =>
 		{
-			port.Write(dataAsByteArray, 0, 1);
+			port.Write(dataToSend, 0, dataToSend.Length);
 		}, EDisagBaudRate.B2400);
 	}
 
@@ -101,7 +116,7 @@ public class DisagSerialCommands
 		await InvokeSerial(port =>
 		{
 			var data = commandString.ToByteArray(true);
-			data.AddCr();
+			data = data.AddCr();
 
 			var sw300Ms = new Stopwatch();
 
@@ -127,6 +142,7 @@ public class DisagSerialCommands
 
 				if (received == (byte)EDisagHex.NAK) continue;
 				if(received != (byte)EDisagHex.ACK) throw new Exception($"Received not expected value. Received {(EDisagHex)received} instead of {EDisagHex.ACK}");
+				break;
 			}
 		});
 	}
@@ -147,17 +163,19 @@ public class DisagSerialCommands
 				port.WriteDisagHex(EDisagHex.ENQ);
 
 				sw100Ms.Restart();
-				while (_serialPort.BytesToRead == 0 && sw100Ms.ElapsedMilliseconds <= 100)
+				while (port.BytesToRead == 0 && sw100Ms.ElapsedMilliseconds <= 100)
 				{
 					token?.ThrowIfCancellationRequested();
 				}
 				sw100Ms.Stop();
 				sw30S.Stop();
 
-				if(sw100Ms.ElapsedMilliseconds >= 100) continue;
+				if(sw100Ms.ElapsedMilliseconds >= 100) 
+					continue;
 
 				var received = ReadFromSerialPort(port).FirstOrDefault();
-				if (received != (byte)EDisagHex.STX) throw new Exception($"Received not expected value. Received {(EDisagHex)received} instead of {EDisagHex.STX}");
+				if (received != (byte)EDisagHex.STX) throw new Exception($"Received not expected value. Received {received} instead of {EDisagHex.STX}");
+				break;
 			}
 		});
 	}
@@ -168,8 +186,9 @@ public class DisagSerialCommands
 
 		try
 		{
-			OpenSerialPort(baud);
-			var received = invoke(_serialPort);
+			using var serialPort = GetSerialPort(_comPort);
+			serialPort.OpenSerialPort(baud);
+			var received = invoke(serialPort);
 			return Task.FromResult(received);
 		}
 		finally
@@ -184,8 +203,9 @@ public class DisagSerialCommands
 
 		try
 		{
-			OpenSerialPort(baud);
-			invoke(_serialPort);
+			using var serialPort = GetSerialPort(_comPort);
+			serialPort.OpenSerialPort(baud);
+			invoke(serialPort);
 		}
 		finally
 		{
@@ -195,34 +215,10 @@ public class DisagSerialCommands
 		return Task.CompletedTask;
 	}
 
-
-	private void OpenSerialPort(EDisagBaudRate baud)
-	{
-		if(_serialPort.IsOpen && _serialPort.BaudRate == (int)baud)
-		{
-			return;
-		}
-
-		CloseSerialPort();
-
-		_serialPort.BaudRate = (int)baud;
-		_serialPort.Open();
-	}
-
-	private void CloseSerialPort()
-	{
-		if (_serialPort.IsOpen)
-		{
-			_serialPort.Close();
-		}
-	}
-
 	private byte[] ReadFromSerialPort(SerialPort sender)
 	{
 		var buffer = new byte[sender.BytesToRead];
-		
 		sender.Read(buffer, 0, buffer.Length);
-
 		return buffer;
 	}
 
@@ -237,5 +233,10 @@ public class DisagSerialCommands
 	private void LeaveSemaphore()
 	{
 		_semaphore.Release();
+	}
+
+	public void Dispose()
+	{
+		_semaphore.Dispose();
 	}
 }

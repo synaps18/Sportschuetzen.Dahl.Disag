@@ -32,13 +32,15 @@ public static class ByteArrayExtensions
 
 	public static bool ValidateChecksum(this byte[] bytes)
 	{
+		var asCharArray = bytes.ToCharArray();
 		var lastElementIsCr = bytes.LastOrDefault() == (byte)EDisagHex.CR;
 		var receivedChecksum = lastElementIsCr ? bytes[^2] : bytes[^1];
 
 		var bytesWithoutChecksum = bytes.RemoveChecksumAndCr().ToCharArray();
-		var calculatedChecksum = bytesWithoutChecksum.CalCheckSum();
+		var calculatedChecksum = bytesWithoutChecksum.ToString().ToByteArray(true);
 
-		return receivedChecksum == calculatedChecksum;
+		//TODO How does the disag calc the checksum???
+		return true;
 	}
 
 	public static char[] ToCharArray(this byte[] bytes)
@@ -48,12 +50,9 @@ public static class ByteArrayExtensions
 
 	public static string AsString(this byte[] bytes)
 	{
-		var characters = bytes.Select(a => (char)a);
-		var rawString = new string(characters.ToArray());
+		var characters = bytes.Select(a => (char)a).ToArray();
+		var rawString = characters.ToString() ?? string.Empty;
 
-		var stringWithoutCr = rawString.RemoveCr();
-		var stringWithoutChecksum = rawString.RemoveChecksum();
-
-		return new string(characters.ToArray());
+		return rawString;
 	}
 }

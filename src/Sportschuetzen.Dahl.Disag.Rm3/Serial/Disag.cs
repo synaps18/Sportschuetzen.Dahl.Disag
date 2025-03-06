@@ -1,4 +1,5 @@
-﻿using System.IO.Ports;
+﻿using System.Diagnostics;
+using System.IO.Ports;
 using Sportschuetzen.Dahl.Disag.Models.Constants;
 using Sportschuetzen.Dahl.Disag.Models.Enum;
 using Sportschuetzen.Dahl.Disag.Models.Evaluation;
@@ -6,7 +7,7 @@ using Sportschuetzen.Dahl.Disag.Rm3.Extensions;
 
 namespace Sportschuetzen.Dahl.Disag.Rm3.Serial;
 
-public class Disag
+public class Disag : IDisposable
 {
 	private readonly DisagSerialCommands _disagSerialCommands;
 
@@ -27,21 +28,11 @@ public class Disag
 			Printing = parameter.Print
 		};
 
+
 		await _disagSerialCommands.Send_Disag_Command(series.ToString(), token);
-		var expectedWsc= await _disagSerialCommands.Await_Disag_Response(token);
-		if (expectedWsc.Command != ReceiveCommandConstants.WSC)
-		{
-			throw new Exception($"Received not expected value. Received {expectedWsc.Command} instead of {ReceiveCommandConstants.WSC}");
-		}
-
-		var staCommand = await _disagSerialCommands.Await_Disag_Response(token);
-		if (staCommand.Command != ReceiveCommandConstants.STA)
-		{
-			throw new Exception($"Received not expected value. Received {staCommand.Command} instead of {ReceiveCommandConstants.STA}");
-		}
-
 
 		var serie = new DisagSeries();
+
 		while (true)
 		{
 			var command = await _disagSerialCommands.Await_Disag_Response(token);
@@ -56,7 +47,10 @@ public class Disag
 					 
 					continue;
 				case ReceiveCommandConstants.SCH:
-					serie.Stripes.Last().BullsEyes.Last().Shots.Add(command.Parameter.ToDisagSchuss());
+					//TODO Only working with ONE shot per bulls eye!! Refactor this to work with multiple shots per bulls eye
+					var bullsEye = new DisagBullsEye();
+					bullsEye.Shots.Add(command.Parameter.ToDisagSchuss());
+					serie.Stripes.Last().BullsEyes.Add(bullsEye);
 					continue;
 				case ReceiveCommandConstants.WSE:
 					return serie;
@@ -91,18 +85,22 @@ public class Disag
 		await _disagSerialCommands.Send_Disag_Command(EDisagCommand.ABR);
 	}
 
-	public async Task<string> Send_Get_Serial()
+	public async Task<string> Send_Get_Serial_Number()
 	{
 		await _disagSerialCommands.Send_Disag_Command(EDisagCommand.SNR);
 		var serial = await _disagSerialCommands.Await_Disag_Response();
-		return serial.Parameter;
+		var wsc = await _disagSerialCommands.Await_Disag_Response();
+
+		return serial.ToString();
 	}
 
-	public async Task<string> Send_Get_Type()
+	public async Task<string> Send_Get_Machine_Type()
 	{
 		await _disagSerialCommands.Send_Disag_Command(EDisagCommand.TYP);
 		var serial = await _disagSerialCommands.Await_Disag_Response();
-		return serial.Parameter;
+		var wsc = await _disagSerialCommands.Await_Disag_Response();
+
+		return serial.ToString();
 	}
 
 	/// <summary>
@@ -110,8 +108,20 @@ public class Disag
 	/// </summary>
 	/// <param name="text">MAX 10 characters!</param>
 	/// <returns></returns>
+	[Obsolete("Beim test, wollte die Disag den gesamten streifen werten")]
 	public async Task Send_Print(string text)
 	{
+		throw new NotImplementedException("Beim test, wollte die Disag den gesamten streifen werten");
 		await _disagSerialCommands.Send_Disag_Command(EDisagCommand.DRT);
+		var wsc = await _disagSerialCommands.Await_Disag_Response();
+		Console.WriteLine(wsc);
+
+		var wsc2 = await _disagSerialCommands.Await_Disag_Response();
+		Console.WriteLine(wsc2);
+	}
+
+	public void Dispose()
+	{
+		_disagSerialCommands.Dispose();
 	}
 }

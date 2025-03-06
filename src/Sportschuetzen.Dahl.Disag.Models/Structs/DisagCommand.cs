@@ -14,4 +14,9 @@ public struct DisagCommand
 	///     Parameter of command
 	/// </summary>
 	public string Parameter;
+
+	public override string ToString()
+	{
+		return Command + "=" + Parameter;
+	}
 }

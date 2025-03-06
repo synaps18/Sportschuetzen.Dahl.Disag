@@ -15,9 +15,9 @@ public static class StringExtensions
 	/// </summary>
 	/// <param name="rawData"></param>
 	/// <returns></returns>
-	public static DisagCommand ToDisagResponse(this string rawData)
+	public static DisagCommand ToDisagResponse(this string rawData, bool removeCr = true)
 	{
-		var cleanedData = rawData.RemoveCr();
+		var cleanedData = removeCr ? rawData.RemoveCr() : rawData;
 		var response = new DisagCommand();
 
 		rawData.Debug($"Parsing [{rawData}] to {typeof(DisagCommand)}");
